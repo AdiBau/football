@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+
+  <style>
+    p {
+      text-align: center;
+      border-bottom: 2px dotted black;
+    }
+
+    button {
+      margin-left: 20px;
+    }
+
+    div {
+      margin: 20px auto;
+      border: 2px solid black;
+      padding: 10px;
+      font-size: 18px;
+    }
+
+    input,
+    select {
+      margin-left: 10px;
+      margin-right: 30px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="addNewTeam">
+    <p>Add New Team</p>
+    <label for="newTeam">Team Name</label>
+    <input type="text" name="NewTeam" id="newTeam" placeholder="Team Name">
+
+    <label for="newCode">Team Code</label>
+    <input type="text" name="NewCode" id="newCode" placeholder="Team Code">
+
+    <label for="newCantry">Team Cantry</label>
+    <input type="text" name="NewCantry" id="newCantry" placeholder="Team 
+Cantry">
+    <button onclick="send()">SEND</button>
+  </div>
+
+  <div class="DeleteTeam">
+    <p>Delete Team</p>
+    <select type="text" name="deleteTeam" id="deleteTeam" placeholder="deleteTeam"></select>
+    <label for="deleteTeam">deleteTeam</label>
+
+    <button onclick=deleteTeam()>SEND</button>
+  </div>
+
+  <div class="addNewPlayer">
+    <p>Add New Player</p>
+    <label for="newPlayer">Name</label>
+    <input type="text" name="NewPlayer" id="newPlayer" placeholder="Player
+    Name">
+
+    <label for="lastName">last name</label>
+    <input type="text" name="lastName" id="lastName" placeholder="Player last
+    name">
+
+    <label for="PlayerNumber">Player number</label>
+    <input type="text" name="PlayerNumber" id="PlayerNumber" placeholder="Player number">
+
+
+    <label for="PlayerPosition">Player position</label>
+    <input type="text" name="PlayerPosition" id="PlayerPosition" placeholder="Player position">
+
+    <label for="PlayerselectNewTeam">Player TeamCode</label>
+    <select type="text" name="PlayerselectNewTeam" id="PlayerselectNewTeam" placeholder="Player New Team 
+  Name"></select>
+   
+    <button onclick=sendPlayer()>SEND</button>
+  </div>
+
+  <div class="DeletePlayer">
+    <p>Delete Player</p>
+    <select type="text" name="deletePlayer" id="deletePlayer" placeholder="delete Player"></select>
+    <label for="deletePlayer">Delete Player</label>
+    <button onclick=deletePlayer()>SEND</button>
+  </div>
+
+  <div class="playerChange">
+    <p>Player Change Club</p>
+    <label for="playerChange">Select Player</label>
+    <select type="text" name="playerChange" id="selectPlayerChange" placeholder="Player Name"></select>
+
+    <label for="payerNewTeam">Select new Team</label>
+    <select type="text" name="playerNewTeam" id="selectNewTeam" placeholder="Player New Team 
+      Name"></select>
+
+
+    <button onclick=PlayerChange() value="PUT">SEND</button>
+    
+
+    <div>
+      <button onclick=statistic()>STATISTIC</button>
+      <textarea name="textArea" id="textArea" rows="30" cols="100"></textarea>
+    </div>
+  </div>
+
+  <script>
+    const selectCode = document.querySelector('#selectNewTeam');
+    const selectDelete = document.querySelector('#deleteTeam');
+    const selectDeletePlayer = document.querySelector('#deletePlayer');
+    const selectPlayerChange = document.querySelector('#selectPlayerChange');
+    const selectNewTeam = document.querySelector('#selectNewTeam');
+    const PlayerselectNewTeam = document.querySelector('#PlayerselectNewTeam');
+    const textArea = document.querySelector('#textArea');
+    textArea
+
+
+
+
+
+    function send() {
+      fetch('/addNewTeam', {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            teamName: document.querySelector('#newTeam').value,
+            teamCode: document.querySelector('#newCode').value,
+            teamCantry: document.querySelector('#newCantry').value
+          })
+        }).then(res => res.text())
+        .then(res => {
+          console.log(res);
+          location.reload()
+        })
+    }
+
+    function deleteTeam() {
+      fetch(`/deleteTeam/${selectDelete.value}`, {
+          method: 'delete',
+        }).then(res => res.text())
+        .then(res => {
+          console.log(res);
+          location.reload();
+        })
+    }
+
+    function deletePlayer() {
+      let player = selectDeletePlayer.value.split(" ");
+      let name = player[0];
+      let lastName = player[1];
+
+      fetch(`/deletePlayer/${name}/${lastName}`, {
+          method: 'delete',
+        }).then(res => res.text())
+        .then(res => {
+          console.log(res);
+          location.reload();
+        })
+    }
+
+
+    function sendPlayer() {
+      fetch("/addNewPlayer", {
+          method: 'post',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            name: document.querySelector('#newPlayer').value,
+            lastName: document.querySelector('#lastName').value,
+            number: document.querySelector('#PlayerNumber').value,
+            position: document.querySelector('#PlayerPosition').value,
+            code: document.querySelector('#PlayerselectNewTeam').value,
+
+          })
+        }).then(res => res.text())
+        .then(res=> console.log(res))
+        //.then(location.reload())
+    }
+    // wczytaj
+
+
+
+
+    fetch("/playerList")
+      .then(list => list.json())
+      .then(list => {
+        for (element of list) {
+          // selectName.options[list.indexOf(element)] = new Option(element.name + " " + element.last_Name);
+          selectDeletePlayer.options[list.indexOf(element)] = new Option(element.name + " " + element.last_Name);
+          selectPlayerChange.options[list.indexOf(element)] = new Option(element.name + " " + element.last_Name);
+
+
+        }
+      })
+
+    fetch("/teams_List")
+      .then(list => list.json())
+      .then(list => {
+
+
+        for (element of list) {
+          selectCode.options[list.indexOf(element)] = new Option(element.code);
+          selectDelete.options[list.indexOf(element)] = new Option(element.code);
+          selectDelete.options[list.indexOf(element)] = new Option(element.code);
+          PlayerselectNewTeam.options[list.indexOf(element)] = new Option(element.code);
+         
+        }
+      })
+
+    function PlayerChange() {
+      const All_name = selectPlayerChange.value;
+      const tab_name = All_name.split(" ");
+      const name = tab_name[0];
+      const last_name = tab_name[1];
+      const code = selectCode.value;
+      fetch(`/playerChangeClub/${name}/${last_name}/${code}`, {
+          method: 'put'
+        })
+        .then(list => list.text())
+        .then(list => {
+          console.log(list);
+        })
+    }
+function statistic(){
+  fetch("/statistic")
+  .then(list => list.json())
+  .then(list => {
+    textArea.value = JSON.stringify(list);
+    //console.log(JSON.stringify(list);
+    
+  })
+}
+
+  </script>
+</body>
+
+</html>
