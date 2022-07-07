@@ -2,7 +2,7 @@ const express = require('express');
 const cors = require('cors');
 const mongo = require('mongodb');
 const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://footballTest:y2wwEB8eagzrzBZ@firstcluster.dpvjtvi.mongodb.net/?retryWrites=true&w=majority";
+const uri = "mongodb+srv://LOGIN-TYPE:PASSWORD-TYPE@firstcluster.dpvjtvi.mongodb.net/?retryWrites=true&w=majority";
 const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true, serverApi: ServerApiVersion.v1 });
 // database----------
 const db = client.db("football");
