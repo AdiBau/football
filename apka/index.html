@@ -5,7 +5,7 @@
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Document</title>
+  <title>Football v1</title>
 
   <style>
     p {
@@ -36,14 +36,13 @@
   <div class="addNewTeam">
     <p>Add New Team</p>
     <label for="newTeam">Team Name</label>
-    <input type="text" name="NewTeam" id="newTeam" placeholder="Team Name">
+    <input type="text" name="NewTeam" id="newTeam" placeholder="Team Name" required minlength="3">
 
     <label for="newCode">Team Code</label>
-    <input type="text" name="NewCode" id="newCode" placeholder="Team Code">
+    <input type="text" name="NewCode" id="newCode" placeholder="Team Code" required minlength="3">
 
     <label for="newCantry">Team Cantry</label>
-    <input type="text" name="NewCantry" id="newCantry" placeholder="Team 
-Cantry">
+    <input type="text" name="NewCantry" id="newCantry" placeholder="Team Cantry" required minlength="3">
     <button onclick="send()">SEND</button>
   </div>
 
@@ -130,7 +129,8 @@ Cantry">
             teamCode: document.querySelector('#newCode').value,
             teamCantry: document.querySelector('#newCantry').value
           })
-        }).then(res => res.text())
+        })
+        .then(res => res.text())
         .then(res => {
           console.log(res);
           location.reload()
